@@ -1,29 +1,56 @@
 ---
-name: code-review
-description: Perform thorough, actionable code reviews across any language or framework. Use this skill when the user asks to review, audit, critique, or improve existing code, including pull request reviews, security audits, performance analysis, or readability feedback.
+name: pdf-extraction
+description: Extracts text from PDF files and returns clean content. Use this skill when a user gives a PDF or asks to get text from one.
 ---
 
-This skill guides delivery of clear, actionable code reviews. Provide real analysis with specific suggestions and honest prioritization, not some generic comments.
- 
-The user provides code to review. They may include context about the language, framework, or what kind of feedback they want (security, performance, readability, etc.).
- 
-## Review Thinking
- 
-Before commenting, understand the code's context:
- 
-- **Purpose**: What is this code trying to do?
-- **Scope**: Is this a small helper, a critical function, or a large module? Scale feedback accordingly.
-- **Priority**: Make sure correctness first, then security, performance, and style.
-**CRITICAL**: Prioritize findings clearly. Explain why each issue matters, not just that it exists. Every issue raised should include a concrete suggestion or corrected snippet.
- 
-## Code Review Guidelines
- 
-Cover these areas in every review:
- 
-- **Correctness**: Look for logic bugs, unhandled edge cases, and wrong assumptions about input.
-- **Security**: Flag vulnerabilities like missing input validation or hardcoded secrets.
-- **Performance**: Call out inefficiencies that would matter at real scale and skip any unnecessary micro optimizations.
-- **Readability**: Note unclear naming, overly complex logic, or anything that would confuse a new contributor.
-NEVER leave vague feedback like "this could be cleaner" without showing what cleaner looks like.
- 
-**IMPORTANT**: Match feedback depth to code size. A 20 line function needs less analysis than a 300 line class, but both deserve precise, useful comments.
+## Extract PDF text
+
+This skill is for pulling text out of PDF files and cleaning it up so it’s actually readable.
+
+Use pdfplumber for text extraction:
+
+```python
+import pdfplumber
+
+with pdfplumber.open("file.pdf") as pdf:
+    text = pdf.pages[0].extract_text()
+```
+
+
+## How it works
+
+1. **Load the PDF**
+   - Get the file from the given path or input
+
+2. **Extract text**
+   - Use a reliable library (default to `pdfplumber`)
+   - Go through each page and collect the text
+
+3. **Clean the text**
+   - Remove extra spaces and weird line breaks
+   - Keep paragraphs readable when possible
+
+4. **Handle edge cases**
+   - If no text is found, the PDF might be scanned
+   - In that case, mention that OCR might be needed
+
+
+## Output format
+
+Return: extracted and cleaned text
+
+
+## Guidelines
+
+- Keep the output clean and easy to read
+- Don’t list a bunch of tools
+- Stick to one solid method unless there’s a reason not to
+- Focus on giving useful text, not explaining every detail
+
+
+## File access
+
+If needed, use:
+- `scripts/extract_text.py`
+
+#IMPORTANT: Only use the script if basic extraction doesn’t work well. Do NOT use this skill for editing or creating PDFs and/pr working with images unless text extraction is needed.
